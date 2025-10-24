@@ -5,15 +5,27 @@ import { auth, db } from "@/lib/firebase";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import NavBar from "@/components/NavBar";
+
+interface Recipe {
+  title: string;
+  image: string;
+  description: string;
+  createdAt: { toDate: () => Date };
+  author: string;
+  ingredients: string[];
+  instructions: string[];
+  rating: number;
+  prepTime: number;
+}
 
 export default function RecipeDetails() {
   const params = useParams();
   const recipeId = params.id as string;
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [recipe, setRecipe] = useState<any>(null);
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [notFound, setNotFound] = useState(false);
   const router = useRouter();
   const [isFavorite, setIsFavorite] = useState(false);
@@ -56,7 +68,7 @@ export default function RecipeDetails() {
         if (!docSnap.exists()) {
           setNotFound(true);
         } else {
-          setRecipe(docSnap.data());
+          setRecipe(docSnap.data() as Recipe);
         }
       } catch (error) {
         console.error("Error fetching recipe:", error);
@@ -168,7 +180,7 @@ export default function RecipeDetails() {
 
           <div className="py-[24]">
             <h3 className="text-3xl font-medium text-profile-light mb-[8]">Ingredients</h3>
-              {recipe.ingredients.map((ingredient: any) => (
+              {recipe.ingredients.map((ingredient: string) => (
                 <label key={ingredient} className="flex items-center gap-2 mb-[8]">
                   <input type="checkbox" className="appearance-none w-6 h-6 border border-profile-lightchecked checked:bg-yellow checked:border-yellow transition cursor-pointer rounded-[4] bg-transparent" />
                   <span className="text-lg font-normal text-profile-light">{ingredient}</span>
@@ -179,7 +191,7 @@ export default function RecipeDetails() {
           <div className="py-[24]">
             <h3 className="text-3xl font-medium text-profile-light mb-[8]">Instructions</h3>
             <ol className="list-decimal list-inside">
-              {recipe.instructions.map((instruction: any) => (
+              {recipe.instructions.map((instruction: string) => (
                 <li key={instruction} className="text-lg font-normal text-profile-light">{instruction}</li>
               ))}
             </ol>

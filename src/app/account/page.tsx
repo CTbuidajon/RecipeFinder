@@ -6,12 +6,22 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { User } from "firebase/auth";
+interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  rating: number;
+}
+
 
 export default function AccountPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[] | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -62,7 +72,7 @@ export default function AccountPage() {
         const idsChunk = favorites.slice(i, i + 10);
         const q = query(recipesRef, where("__name__", "in", idsChunk));
         const snapshot = await getDocs(q);
-        chunks.push(...snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        chunks.push(...snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Recipe)));
       }
   
       setFavoriteRecipes(chunks);
@@ -128,7 +138,7 @@ export default function AccountPage() {
       <div className="">
         <h3 className="text-lg font-medium text-profile-light mb-8">Favorite Recipes</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 md:w-fit justify-self-center lg:grid-cols-3 gap-6">
-          {favoriteRecipes.map((recipe) => (
+          {favoriteRecipes && favoriteRecipes.map((recipe) => (
             <div key={recipe.id} className="relative max-w-[330px] w-full h-[328px] ">
             <div
               onClick={() => router.push(`/recipes/${recipe.id}`)}

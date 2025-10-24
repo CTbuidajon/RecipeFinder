@@ -1,24 +1,35 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { useEffect, useState, useCallback } from 'react';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-import { collection, deleteDoc, doc, getDocs, query, where, arrayUnion, arrayRemove, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, where, Query, DocumentData } from "firebase/firestore";
 import { db } from "../../lib/firebase";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import EditRecipeModal from '@/components/EditRecipeModal';
 import NavBar from '@/components/NavBar';
 
+interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  rating: number;
+  image?: string;
+  userId?: string;
+  [key: string]: unknown;
+}
+
 export default function RecipesPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [openEditMenuId, setOpenEditMenuId] = useState<string | null>(null);
-  const [editingRecipe, setEditingRecipe] = useState<any>(null);
+  const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isPrepTimeOpen, setIsPrepTimeOpen] = useState(false);
-  const [recipes, setRecipes] = useState<any[]>([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -29,10 +40,10 @@ export default function RecipesPage() {
 
 
 
-  const fetchRecipes = async () => {
+  const fetchRecipes = useCallback(async () => {
     try {
-      let q: any = collection(db, "recipes");
-      const filters: any[] = [];
+      let q: Query<DocumentData> = collection(db, "recipes");
+      const filters: ReturnType<typeof where>[] = [];
 
       if (selectedCategories.length > 0) {
         filters.push(where("category", "in", selectedCategories.slice(0, 10)));
@@ -55,13 +66,13 @@ export default function RecipesPage() {
       }
 
       const querySnapshot = await getDocs(q);
-      const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as any) }));
+      const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Recipe));
       setRecipes(data);
       setCurrentPage(1);
     } catch (error) {
       console.error("Error fetching recipes:", error);
     }
-  };
+  }, [selectedCategories, prepTime, searchQuery]);
   const handleDeleteRecipe = async (recipeId: string) => {
     if (!confirm("Are you sure you want to delete this recipe?")) return;
   
@@ -77,7 +88,7 @@ export default function RecipesPage() {
   };
   
 
-  useEffect(() => { fetchRecipes(); }, [selectedCategories, prepTime, searchQuery]);
+  useEffect(() => { fetchRecipes(); }, [fetchRecipes]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {

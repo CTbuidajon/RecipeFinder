@@ -66,15 +66,16 @@ export default function SignUpPage() {
       });
 
       router.push('/recipes');
-    } catch (err: any) {
-      if (err.code === 'auth/email-already-in-use') {
+    } catch (err: unknown) {
+      const error = err as { code?: string; message?: string };
+      if (error.code === 'auth/email-already-in-use') {
         setError('This email is already registered');
-      } else if (err.code === 'auth/invalid-email') {
+      } else if (error.code === 'auth/invalid-email') {
         setError('Invalid email address');
-      } else if (err.code === 'auth/weak-password') {
+      } else if (error.code === 'auth/weak-password') {
         setError('Password is too weak');
       } else {
-        setError(err.message || 'Failed to create account');
+        setError(error.message || 'Failed to create account');
       }
     } finally {
       setLoading(false);
@@ -102,8 +103,9 @@ export default function SignUpPage() {
       });
 
       router.push('/recipes');
-    } catch (err: any) {
-      setError(err.message || 'Failed to sign up with Google');
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+      setError(error.message || 'Failed to sign up with Google');
     } finally {
       setLoading(false);
     }
@@ -118,7 +120,7 @@ export default function SignUpPage() {
               <Image src="/logo.svg" alt="RecipeFinder" width={184} height={32} />
             </div>
             <h1 className="text-2xl font-bold text-foreground mb-2">Get started</h1>
-            <p className="text-dark">Welcome! We're thrilled to have you</p>
+            <p className="text-dark">Welcome! We&apos;re thrilled to have you</p>
           </div>
 
           {error && (

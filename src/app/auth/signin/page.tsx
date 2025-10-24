@@ -22,8 +22,8 @@ export default function SignInPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/recipes');
-    } catch (err: any) {
-      setError(err.message || 'Failed to sign in');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to sign in');
     } finally {
       setLoading(false);
     }
@@ -37,8 +37,8 @@ export default function SignInPage() {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       router.push('/recipes');
-    } catch (err: any) {
-      setError(err.message || 'Failed to sign in with Google');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to sign in with Google');
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export default function SignInPage() {
               <Image src="/logo.svg" alt="RecipeFinder" width={184} height={32} />
             </div>
             <h1 className="text-2xl font-bold text-foreground mb-2">Welcome Back!</h1>
-            <p className="text-dark text-lg">We're thrilled to have you</p>
+            <p className="text-dark text-lg">We are thrilled to have you</p>
           </div>
 
           {error && (

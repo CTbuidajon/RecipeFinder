@@ -4,7 +4,21 @@ import { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
-export default function EditRecipeModal({ recipe, onClose, onSave }: any) {
+interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  cuisine: string;
+  rating: number;
+}
+
+interface EditRecipeModalProps {
+  recipe: Recipe;
+  onClose: () => void;
+  onSave: () => void;
+}
+
+export default function EditRecipeModal({ recipe, onClose, onSave }: EditRecipeModalProps) {
   const [title, setTitle] = useState(recipe.title);
   const [description, setDescription] = useState(recipe.description);
   const [cuisine, setCuisine] = useState(recipe.cuisine);
