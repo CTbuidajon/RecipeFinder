@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: rgba(45, 39, 38, 1);
+  --black: rgba(0, 0, 0, 1);
+  --foreground: rgba(255, 255, 255, 1);
+  --dark: rgba(109, 102, 101, 1);
+  --grey: rgba(138, 143, 147, 1);
+  --half-transparent: rgba(255, 255, 255, 0.6);
+  --yellow: rgba(255, 228, 120, 1);
+  --yellow-hover: rgb(255, 236, 163);
+  --light-grey: rgba(255, 255, 255, 0.16);
+  --profile-light: rgba(230, 216, 214, 1);
+  --border-light: rgba(230, 216, 214, 0.2);
+  --profile-grey: rgba(230, 216, 214, 0.62);
+  --button-border: rgba(182, 160, 145, 0.2);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-black: var(--black);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-dark: var(--dark);
+  --color-grey: var(--grey);
+  --color-half-transparent: var(--half-transparent);
+  --color-yellow: var(--yellow);
+  --color-yellow-hover: var(--yellow-hover);
+  --color-light-grey: var(--light-grey);
+  --color-profile-light: var(--profile-light);
+  --color-border-light: var(--border-light);
+  --color-profile-grey: var(--profile-grey);
+  --color-button-border: var(--button-border);
+  --font-sans: var(--font-fira-sans);
+  --font-mono: var(--font-fira-sans);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-fira-sans);
 }

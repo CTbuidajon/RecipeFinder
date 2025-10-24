@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Recipe App
+
+A modern recipe management web application with user authentication, favorites, and detailed recipe pages.
 
 ## Getting Started
 
@@ -14,23 +16,75 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure Overview
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+/app # Next.js pages and client components
+/components # Reusable UI components (NavBar, RecipeCard, Modals, etc.)
+/lib # Firebase initialization and helper functions
+/public # Static assets (images, icons, logos)
+/styles # Global and modular CSS/SCSS files
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Key pages and features:
 
-## Learn More
+pages/recipes – List of all recipes with search and filters
+pages/recipes/[id] – Recipe detail page
+pages/account – User account page with favorite recipes
+pages/auth - Authentication with email and password or Google
+components/NewRecipeModal.tsx – Modal for adding new recipes
+components/EditRecipeModal.tsx – Modal for editing recipes
+components/NavBar.tsx – Responsive navigation bar
 
-To learn more about Next.js, take a look at the following resources:
+## Firebase Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create a new project in Firebase Console.
+Enable:
+Authentication → Email/Password + Google
+Firestore Database
+Add the following to your .env.local:
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+​
+Initialize Firebase in /lib/firebase.ts:
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
-## Deploy on Vercel
+const firebaseConfig = {
+apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+};
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+const app = initializeApp(firebaseConfig);
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+
+## Tech Stack Summary
+
+Framework: Next.js 13 with React 18
+
+Authentication: Firebase Auth (Google Sign-In)
+
+Database: Firebase Firestore
+
+Styling: Tailwind CSS
+
+Hosting: Vercel
+
+Image Optimization: Next.js Image component
+
+## Vercel Deployment Link
+
+The app is deployed and accessible at:
+https://your-app.vercel.app
