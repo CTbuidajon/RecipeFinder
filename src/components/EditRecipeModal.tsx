@@ -32,7 +32,7 @@ export default function EditRecipeModal({ recipe, onClose, onSave }: EditRecipeM
         title_lowercase: title.toLowerCase(),
         description,
         cuisine,
-        rating: parseFloat(rating),
+        rating: Number(rating),
       });
       onSave();
       onClose();
@@ -80,8 +80,8 @@ export default function EditRecipeModal({ recipe, onClose, onSave }: EditRecipeM
           <input
             type="number"
             step="0.1"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
+            value={String(rating)}
+            onChange={(e) => setRating(Number(e.target.value))}
             className="w-full mt-1 p-2 border border-profile-light rounded-[8px] bg-transparent text-profile-light focus:outline-none"
           />
         </label>

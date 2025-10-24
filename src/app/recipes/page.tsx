@@ -15,6 +15,7 @@ interface Recipe {
   title: string;
   description: string;
   category: string;
+  cuisine: string;
   rating: number;
   image?: string;
   userId?: string;
