@@ -87,4 +87,4 @@ Image Optimization: Next.js Image component
 ## Vercel Deployment Link
 
 The app is deployed and accessible at:
-https://your-app.vercel.app
+https://recipe-finder-seven-phi.vercel.app
