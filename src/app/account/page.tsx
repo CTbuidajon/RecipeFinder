@@ -47,7 +47,6 @@ export default function AccountPage() {
         return;
       }
 
-      // Отримати дані користувача з Firestore
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
       
@@ -67,7 +66,6 @@ export default function AccountPage() {
       const recipesRef = collection(db, "recipes");
       const chunks = [];
   
-      // Firestore 'in' query підтримує максимум 10 елементів
       for (let i = 0; i < favorites.length; i += 10) {
         const idsChunk = favorites.slice(i, i + 10);
         const q = query(recipesRef, where("__name__", "in", idsChunk));
